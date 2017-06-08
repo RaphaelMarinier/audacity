@@ -365,7 +365,8 @@ am__audacity_SOURCES_DIST = BlockFile.cpp BlockFile.h DirManager.cpp \
 	effects/AutoDuck.h effects/BassTreble.cpp effects/BassTreble.h \
 	effects/Biquad.cpp effects/Biquad.h effects/ChangePitch.cpp \
 	effects/ChangePitch.h effects/ChangeSpeed.cpp \
-	effects/ChangeSpeed.h effects/ChangeTempo.cpp \
+	effects/ChangeSpeed.h effects/AudioAlign.cpp \
+	effects/AudioAlign.h effects/ChangeTempo.cpp \
 	effects/ChangeTempo.h effects/ClickRemoval.cpp \
 	effects/ClickRemoval.h effects/Compressor.cpp \
 	effects/Compressor.h effects/Contrast.cpp effects/Contrast.h \
@@ -621,6 +622,7 @@ am_audacity_OBJECTS = $(am__objects_1) audacity-AboutDialog.$(OBJEXT) \
 	effects/audacity-Biquad.$(OBJEXT) \
 	effects/audacity-ChangePitch.$(OBJEXT) \
 	effects/audacity-ChangeSpeed.$(OBJEXT) \
+	effects/audacity-AudioAlign.$(OBJEXT) \
 	effects/audacity-ChangeTempo.$(OBJEXT) \
 	effects/audacity-ClickRemoval.$(OBJEXT) \
 	effects/audacity-Compressor.$(OBJEXT) \
@@ -1095,7 +1097,6 @@ pdfdir = @pdfdir@
 prefix = @prefix@
 program_transform_name = @program_transform_name@
 psdir = @psdir@
-runstatedir = @runstatedir@
 sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 srcdir = @srcdir@
@@ -1269,7 +1270,8 @@ audacity_SOURCES = $(libaudacity_la_SOURCES) AboutDialog.cpp \
 	effects/AutoDuck.h effects/BassTreble.cpp effects/BassTreble.h \
 	effects/Biquad.cpp effects/Biquad.h effects/ChangePitch.cpp \
 	effects/ChangePitch.h effects/ChangeSpeed.cpp \
-	effects/ChangeSpeed.h effects/ChangeTempo.cpp \
+	effects/ChangeSpeed.h effects/AudioAlign.cpp \
+	effects/AudioAlign.h effects/ChangeTempo.cpp \
 	effects/ChangeTempo.h effects/ClickRemoval.cpp \
 	effects/ClickRemoval.h effects/Compressor.cpp \
 	effects/Compressor.h effects/Contrast.cpp effects/Contrast.h \
@@ -1651,6 +1653,8 @@ effects/audacity-Biquad.$(OBJEXT): effects/$(am__dirstamp) \
 effects/audacity-ChangePitch.$(OBJEXT): effects/$(am__dirstamp) \
 	effects/$(DEPDIR)/$(am__dirstamp)
 effects/audacity-ChangeSpeed.$(OBJEXT): effects/$(am__dirstamp) \
+	effects/$(DEPDIR)/$(am__dirstamp)
+effects/audacity-AudioAlign.$(OBJEXT): effects/$(am__dirstamp) \
 	effects/$(DEPDIR)/$(am__dirstamp)
 effects/audacity-ChangeTempo.$(OBJEXT): effects/$(am__dirstamp) \
 	effects/$(DEPDIR)/$(am__dirstamp)
@@ -2202,6 +2206,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@commands/$(DEPDIR)/audacity-SetProjectInfoCommand.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@commands/$(DEPDIR)/audacity-SetTrackInfoCommand.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@effects/$(DEPDIR)/audacity-Amplify.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@effects/$(DEPDIR)/audacity-AudioAlign.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@effects/$(DEPDIR)/audacity-AutoDuck.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@effects/$(DEPDIR)/audacity-BassTreble.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@effects/$(DEPDIR)/audacity-Biquad.Po@am__quote@
@@ -4238,6 +4243,20 @@ effects/audacity-ChangeSpeed.obj: effects/ChangeSpeed.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='effects/ChangeSpeed.cpp' object='effects/audacity-ChangeSpeed.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o effects/audacity-ChangeSpeed.obj `if test -f 'effects/ChangeSpeed.cpp'; then $(CYGPATH_W) 'effects/ChangeSpeed.cpp'; else $(CYGPATH_W) '$(srcdir)/effects/ChangeSpeed.cpp'; fi`
+
+effects/audacity-AudioAlign.o: effects/AudioAlign.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT effects/audacity-AudioAlign.o -MD -MP -MF effects/$(DEPDIR)/audacity-AudioAlign.Tpo -c -o effects/audacity-AudioAlign.o `test -f 'effects/AudioAlign.cpp' || echo '$(srcdir)/'`effects/AudioAlign.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) effects/$(DEPDIR)/audacity-AudioAlign.Tpo effects/$(DEPDIR)/audacity-AudioAlign.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='effects/AudioAlign.cpp' object='effects/audacity-AudioAlign.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o effects/audacity-AudioAlign.o `test -f 'effects/AudioAlign.cpp' || echo '$(srcdir)/'`effects/AudioAlign.cpp
+
+effects/audacity-AudioAlign.obj: effects/AudioAlign.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT effects/audacity-AudioAlign.obj -MD -MP -MF effects/$(DEPDIR)/audacity-AudioAlign.Tpo -c -o effects/audacity-AudioAlign.obj `if test -f 'effects/AudioAlign.cpp'; then $(CYGPATH_W) 'effects/AudioAlign.cpp'; else $(CYGPATH_W) '$(srcdir)/effects/AudioAlign.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) effects/$(DEPDIR)/audacity-AudioAlign.Tpo effects/$(DEPDIR)/audacity-AudioAlign.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='effects/AudioAlign.cpp' object='effects/audacity-AudioAlign.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -c -o effects/audacity-AudioAlign.obj `if test -f 'effects/AudioAlign.cpp'; then $(CYGPATH_W) 'effects/AudioAlign.cpp'; else $(CYGPATH_W) '$(srcdir)/effects/AudioAlign.cpp'; fi`
 
 effects/audacity-ChangeTempo.o: effects/ChangeTempo.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(audacity_CPPFLAGS) $(CPPFLAGS) $(audacity_CXXFLAGS) $(CXXFLAGS) -MT effects/audacity-ChangeTempo.o -MD -MP -MF effects/$(DEPDIR)/audacity-ChangeTempo.Tpo -c -o effects/audacity-ChangeTempo.o `test -f 'effects/ChangeTempo.cpp' || echo '$(srcdir)/'`effects/ChangeTempo.cpp
