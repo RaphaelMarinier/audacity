@@ -330,6 +330,8 @@ audacity_SOURCES = \
 	effects/ChangePitch.h \
 	effects/ChangeSpeed.cpp \
 	effects/ChangeSpeed.h \
+	effects/AudioAlign.cpp \
+	effects/AudioAlign.h \
 	effects/ChangeTempo.cpp \
 	effects/ChangeTempo.h \
 	effects/ClickRemoval.cpp \

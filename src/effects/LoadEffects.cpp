@@ -21,6 +21,7 @@
 #include "AutoDuck.h"
 #include "BassTreble.h"
 #include "ChangeSpeed.h"
+#include "AudioAlign.h"
 #include "ClickRemoval.h"
 #include "Compressor.h"
 #include "Distortion.h"
@@ -114,6 +115,8 @@
    EFFECT( AMPLIFY,           EffectAmplify, () )          \
    EFFECT( BASSTREBLE,        EffectBassTreble, () )       \
    EFFECT( CHANGESPEED,       EffectChangeSpeed, () )      \
+   EFFECT( AUDIOALIGN,       EffectAudioAlign, (false) )	   \
+   EFFECT( AUDIOALIGN_BENCHMARK,       EffectAudioAlign, (true) )	   \
    EFFECT( CLICKREMOVAL,      EffectClickRemoval, () )     \
    EFFECT( COMPRESSOR,        EffectCompressor, () )       \
    EFFECT( DISTORTION,        EffectDistortion, () )       \
