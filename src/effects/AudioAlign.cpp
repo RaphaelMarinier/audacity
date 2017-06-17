@@ -759,8 +759,8 @@ bool EffectAudioAlign::Process() {
       // Also align the corresponding right channel.
       t = iter.Next();
       if (t) {
-        wave_track->SetOffset(offset);
-        ResampleTrack(1 / alignment_result.second, wave_track);
+        t->SetOffset(offset);
+        ResampleTrack(1 / alignment_result.second, static_cast<WaveTrack*>(t));
       }
     }
   }
