@@ -585,6 +585,9 @@ void ExportMultiple::OnExport(wxCommandEvent& WXUNUSED(event))
          FileList += '\n';
       }
 
+      // TODO: give some warning dialog first, when only some files exported
+      // successfully.
+
       GuardedCall( [&] {
          // This results dialog is a child of this dialog.
          HelpSystem::ShowInfoDialog( this,
@@ -746,6 +749,7 @@ ProgressResult ExportMultiple::ExportMultipleByLabel(bool byName,
    ExportKit activeSetting;  // pointer to the settings in use for this export
    /* Go round again and do the exporting (so this run is slow but
     * non-interactive) */
+   std::unique_ptr<ProgressDialog> pDialog;
    for (count = 0; count < numFiles; count++) {
       /* get the settings to use for the export from the array */
       activeSetting = exportSettings[count];
@@ -754,7 +758,8 @@ ProgressResult ExportMultiple::ExportMultipleByLabel(bool byName,
          continue;
 
       // Export it
-      ok = DoExport(channels, activeSetting.destfile, false, activeSetting.t0, activeSetting.t1, activeSetting.filetags);
+      ok = DoExport(pDialog, channels, activeSetting.destfile, false,
+         activeSetting.t0, activeSetting.t1, activeSetting.filetags);
       if (ok != ProgressResult::Success && ok != ProgressResult::Stopped) {
          break;
       }
@@ -884,6 +889,7 @@ ProgressResult ExportMultiple::ExportMultipleByTrack(bool byName,
    // loop
    int count = 0; // count the number of sucessful runs
    ExportKit activeSetting;  // pointer to the settings in use for this export
+   std::unique_ptr<ProgressDialog> pDialog;
    for (tr = iter.First(mTracks); tr != NULL; tr = iter.Next()) {
 
       // Want only non-muted wave tracks.
@@ -915,7 +921,9 @@ ProgressResult ExportMultiple::ExportMultipleByTrack(bool byName,
          tr2->SetSelected(true);
 
       // Export the data. "channels" are per track.
-      ok = DoExport(activeSetting.channels, activeSetting.destfile, true, activeSetting.t0, activeSetting.t1, activeSetting.filetags);
+      ok = DoExport(pDialog,
+         activeSetting.channels, activeSetting.destfile, true,
+         activeSetting.t0, activeSetting.t1, activeSetting.filetags);
 
       // Stop if an error occurred
       if (ok != ProgressResult::Success && ok != ProgressResult::Stopped) {
@@ -929,7 +937,8 @@ ProgressResult ExportMultiple::ExportMultipleByTrack(bool byName,
    return ok ;
 }
 
-ProgressResult ExportMultiple::DoExport(unsigned channels,
+ProgressResult ExportMultiple::DoExport(std::unique_ptr<ProgressDialog> &pDialog,
+                              unsigned channels,
                               const wxFileName &inName,
                               bool selectedOnly,
                               double t0,
@@ -945,12 +954,23 @@ ProgressResult ExportMultiple::DoExport(unsigned channels,
    else
       wxLogDebug(wxT("Whole Project"));
 
+   wxFileName backup;
    if (mOverwrite->GetValue()) {
       // Make sure we don't overwrite (corrupt) alias files
       if (!mProject->GetDirManager()->EnsureSafeFilename(inName)) {
          return ProgressResult::Cancelled;
       }
       name = inName;
+      backup.Assign(name);
+
+      int suffix = 0;
+      do {
+         backup.SetName(name.GetName() +
+                           wxString::Format(wxT("%d"), suffix));
+         ++suffix;
+      }
+      while (backup.FileExists());
+      ::wxRenameFile(inName.GetFullPath(), backup.GetFullPath());
    }
    else {
       name = inName;
@@ -961,9 +981,33 @@ ProgressResult ExportMultiple::DoExport(unsigned channels,
       }
    }
 
-   // Call the format export routine
+   ProgressResult success = ProgressResult::Cancelled;
    const wxString fullPath{name.GetFullPath()};
-   auto success = mPlugins[mPluginIndex]->Export(mProject,
+
+   auto cleanup = finally( [&] {
+      bool ok =
+         success == ProgressResult::Stopped ||
+         success == ProgressResult::Success;
+      if (backup.IsOk()) {
+         if ( ok )
+            // Remove backup
+            ::wxRemoveFile(backup.GetFullPath());
+         else {
+            // Restore original
+            ::wxRemoveFile(fullPath);
+            ::wxRenameFile(backup.GetFullPath(), fullPath);
+         }
+      }
+      else {
+         if ( ! ok )
+            // Remove any new, and only partially written, file.
+            ::wxRemoveFile(fullPath);
+      }
+   } );
+
+   // Call the format export routine
+   success = mPlugins[mPluginIndex]->Export(mProject,
+                                            pDialog,
                                                 channels,
                                                 fullPath,
                                                 selectedOnly,
